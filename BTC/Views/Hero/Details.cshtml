@@ -1,0 +1,38 @@
+﻿@model BTC.ViewModels.HeroViewModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Характеристики героя</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayName("Имя")
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayName("Описание")
+        </dt>
+        <dd>
+            @Html.Raw("<pre>" + Model.Description + "</pre>")
+        </dd>
+
+        <dt>
+            @Html.DisplayName("Изображение")
+        </dt>
+        <dd>
+            <img src='@Url.Action("ShowImage", new { id = Model.Id })' />
+        </dd>
+    </dl>
+</div>
+
+<p>
+    @Html.ActionLink("Редактировать", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Назад к списку", "Index")
+</p>

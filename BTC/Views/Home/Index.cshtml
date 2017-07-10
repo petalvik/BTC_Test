@@ -1,0 +1,10 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>Библиотека Супергероев!</h1>
+    <p><img src="~/Images/Heroes.jpg" /></p>
+    <p class="lead">Создавай любых героев с любыми способностями!</p>
+    <p>@Html.ActionLink("Начать", "Index", "Hero", null, new { @class = "btn btn-primary btn-lg" })</p>
+</div>

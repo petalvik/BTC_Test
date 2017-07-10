@@ -1,0 +1,42 @@
+﻿@model BTC.ViewModels.HeroViewModel
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h3>Вы уверены, что хотите удалить этого героя?</h3>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayName("Имя")
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayName("Описание")
+        </dt>
+        <dd>
+            @Html.Raw("<pre>" + Model.Description + "</pre>")
+        </dd>
+
+        <dt>
+            @Html.DisplayName("Изображение")
+        </dt>
+        <dd>
+            <img src='@Url.Action("ShowImage", new { id = Model.Id })' />
+        </dd>
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Удалить" class="btn btn-default" /> |
+            @Html.ActionLink("Назад к списку", "Index")
+        </div>
+    }
+</div>
