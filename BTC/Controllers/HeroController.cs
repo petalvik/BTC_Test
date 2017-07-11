@@ -12,18 +12,18 @@ namespace BTC.Controllers
     [Authorize]
     public class HeroController : Controller
     {
-        private IRepository<Hero> repository;
-        private string userId;
+        private readonly IRepository<Hero> _repository;
+        private readonly string _userId;
 
         public HeroController(IRepository<Hero> repository)
         {
-            this.repository = repository;
-            userId = System.Web.HttpContext.Current.User.Identity.GetUserId();
+            _repository = repository;
+            _userId = System.Web.HttpContext.Current.User.Identity.GetUserId();
         }
 
         public ActionResult ShowImage(int? id)
         {
-            var hero = repository.GetById(id);
+            var hero = _repository.GetById(id);
 
             return File(hero.Image, "image/jpg");
         }
@@ -31,7 +31,7 @@ namespace BTC.Controllers
         // GET: Hero
         public ActionResult Index()
         {
-            var heroes = repository.Get(includeProperties: "Abilities");
+            var heroes = _repository.Get(includeProperties: "Abilities");
             var heroViewModels = heroes.Select(h => (HeroViewModel)h);
             return View(heroViewModels);
         }
@@ -43,7 +43,7 @@ namespace BTC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var hero = repository.GetById(id);
+            var hero = _repository.GetById(id);
             if (hero == null)
             {
                 return HttpNotFound();
@@ -67,10 +67,10 @@ namespace BTC.Controllers
             if (ModelState.IsValid)
             {
                 Hero hero = (Hero)hvm;
-                hero.UserId = userId;
+                hero.UserId = _userId;
 
-                repository.Insert(hero);
-                repository.Save();
+                _repository.Insert(hero);
+                _repository.Save();
                 
                 return RedirectToAction("Index");
             }
@@ -85,7 +85,7 @@ namespace BTC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var hero = repository.GetById(id);
+            var hero = _repository.GetById(id);
             if (hero == null)
             {
                 return HttpNotFound();
@@ -106,17 +106,17 @@ namespace BTC.Controllers
 
                 if (hero.Image != null)
                 {
-                    repository.Update(hero);
+                    _repository.Update(hero);
                 }
                 else
                 {
-                    var oldHero = repository.GetById(hero.Id);
+                    var oldHero = _repository.GetById(hero.Id);
                     oldHero.Name = hero.Name;
                     oldHero.Description = hero.Description;
 
-                    repository.Update(oldHero);
+                    _repository.Update(oldHero);
                 }
-                repository.Save();
+                _repository.Save();
 
                 return RedirectToAction("Index");
             }
@@ -130,7 +130,7 @@ namespace BTC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var hero = repository.GetById(id);
+            var hero = _repository.GetById(id);
             if (hero == null)
             {
                 return HttpNotFound();
@@ -143,9 +143,9 @@ namespace BTC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            var hero = repository.GetById(id);
-            repository.Delete(hero);
-            repository.Save();
+            var hero = _repository.GetById(id);
+            _repository.Delete(hero);
+            _repository.Save();
             return RedirectToAction("Index");
         }
 

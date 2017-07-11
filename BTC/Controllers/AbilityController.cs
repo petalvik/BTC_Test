@@ -11,18 +11,18 @@ namespace BTC.Controllers
     [Authorize]
     public class AbilityController : Controller
     {
-        private IRepository<Ability> repository;
-        private string userId;
+        private readonly IRepository<Ability> _repository;
+        private readonly string _userId;
 
         public AbilityController(IRepository<Ability> repository)
         {
-            this.repository = repository;
-            userId = System.Web.HttpContext.Current.User.Identity.GetUserId();
+            _repository = repository;
+            _userId = System.Web.HttpContext.Current.User.Identity.GetUserId();
         }
 
         public ActionResult ShowImage(int? id)
         {
-            var hero = repository.GetById(id);
+            var hero = _repository.GetById(id);
 
             return File(hero.Image, "image/jpg");
         }
@@ -34,7 +34,7 @@ namespace BTC.Controllers
                 Session["id"] = id.Value;
             int heroId = (int)Session["id"];
 
-            var abilityViewModels = repository
+            var abilityViewModels = _repository
                 .Get(filter: a => a.HeroId == heroId)
                 .Select(a => (AbilityViewModel)a);
             return View(abilityViewModels);
@@ -47,7 +47,7 @@ namespace BTC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var ability = repository.GetById(id);
+            var ability = _repository.GetById(id);
             if (ability == null)
             {
                 return HttpNotFound();
@@ -74,12 +74,12 @@ namespace BTC.Controllers
             if (ModelState.IsValid)
             {
                 var ability = (Ability)avm;
-                ability.UserId = userId;
+                ability.UserId = _userId;
 
                 ability.HeroId = (int)Session["id"];
 
-                repository.Insert(ability);
-                repository.Save();
+                _repository.Insert(ability);
+                _repository.Save();
                 
                 return RedirectToAction("Index");
             }
@@ -94,7 +94,7 @@ namespace BTC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var ability = repository.GetById(id);
+            var ability = _repository.GetById(id);
             if (ability == null)
             {
                 return HttpNotFound();
@@ -116,18 +116,18 @@ namespace BTC.Controllers
 
                 if (ability.Image != null)
                 {
-                    repository.Update(ability);
+                    _repository.Update(ability);
                 }
                 else
                 {
-                    var oldAbility = repository.GetById(ability.Id);
+                    var oldAbility = _repository.GetById(ability.Id);
                     oldAbility.Name = ability.Name;
                     oldAbility.Description = ability.Description;
 
-                    repository.Update(oldAbility);
+                    _repository.Update(oldAbility);
                 }
 
-                repository.Save();
+                _repository.Save();
 
                 return RedirectToAction("Index");
             }            
@@ -141,7 +141,7 @@ namespace BTC.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var ability = repository.GetById(id);
+            var ability = _repository.GetById(id);
             if (ability == null)
             {
                 return HttpNotFound();
@@ -154,9 +154,9 @@ namespace BTC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            var ability = repository.GetById(id);
-            repository.Delete(ability);
-            repository.Save();
+            var ability = _repository.GetById(id);
+            _repository.Delete(ability);
+            _repository.Save();
             return RedirectToAction("Index");
         }
 

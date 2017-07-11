@@ -26,13 +26,13 @@ namespace DAL.Repositories
     public class Repository<TEntity> : IRepository<TEntity>
         where TEntity : class
     {
-        UserContext context;
-        DbSet<TEntity> dbSet;
+        private readonly UserContext _userContext;
+        private readonly DbSet<TEntity> _dbSet;
 
         public Repository(UserContext context)
         {
-            this.context = context;
-            dbSet = context.Set<TEntity>();
+            _userContext = context;
+            _dbSet = context.Set<TEntity>();
         }
 
         public virtual IEnumerable<TEntity> Get(
@@ -40,7 +40,7 @@ namespace DAL.Repositories
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             string includeProperties = "")
         {
-            IQueryable<TEntity> query = dbSet;
+            IQueryable<TEntity> query = _dbSet;
 
             if (filter != null)
             {
@@ -65,38 +65,38 @@ namespace DAL.Repositories
 
         public virtual TEntity GetById(object id)
         {
-            return dbSet.Find(id);
+            return _dbSet.Find(id);
         }
 
         public virtual void Insert(TEntity entity)
         {            
-            dbSet.Add(entity);
+            _dbSet.Add(entity);
         }
 
         public virtual void Update(TEntity entityToUpdate)
         {
-            dbSet.Attach(entityToUpdate);
-            context.Entry(entityToUpdate).State = EntityState.Modified;
+            _dbSet.Attach(entityToUpdate);
+            _userContext.Entry(entityToUpdate).State = EntityState.Modified;
         }
 
         public virtual void Delete(object id)
         {
-            TEntity entityToDelete = dbSet.Find(id);
+            TEntity entityToDelete = _dbSet.Find(id);
             Delete(entityToDelete);
         }
 
         public virtual void Delete(TEntity entityToDelete)
         {
-            if (context.Entry(entityToDelete).State == EntityState.Detached)
+            if (_userContext.Entry(entityToDelete).State == EntityState.Detached)
             {
-                dbSet.Attach(entityToDelete);
+                _dbSet.Attach(entityToDelete);
             }
-            dbSet.Remove(entityToDelete);
+            _dbSet.Remove(entityToDelete);
         }
 
         public void Save()
         {
-            context.SaveChanges();
+            _userContext.SaveChanges();
         }
     }
 }

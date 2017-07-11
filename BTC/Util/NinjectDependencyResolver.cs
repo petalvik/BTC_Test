@@ -10,28 +10,28 @@ namespace BTC.Util
 {
     public class NinjectDependencyResolver : IDependencyResolver
     {
-        private IKernel kernel;
+        private readonly IKernel _kernel;
 
         public NinjectDependencyResolver(IKernel kernelParam)
         {
-            kernel = kernelParam;
+            _kernel = kernelParam;
             AddBindings();
         }
 
         public object GetService(Type serviceType)
         {
-            return kernel.TryGet(serviceType);
+            return _kernel.TryGet(serviceType);
         }
 
         public IEnumerable<object> GetServices(Type serviceType)
         {
-            return kernel.GetAll(serviceType);
+            return _kernel.GetAll(serviceType);
         }
 
         private void AddBindings()
         {
-            kernel.Bind<IRepository<Hero>>().To<Repository<Hero>>().InRequestScope();
-            kernel.Bind<IRepository<Ability>>().To<Repository<Ability>>().InRequestScope();
+            _kernel.Bind<IRepository<Hero>>().To<Repository<Hero>>().InRequestScope();
+            _kernel.Bind<IRepository<Ability>>().To<Repository<Ability>>().InRequestScope();
         }
     }
 }
