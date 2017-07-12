@@ -68,6 +68,10 @@
     <Compile Include="Migrations\201707120736446_InitialCreate.Designer.cs">
       <DependentUpon>201707120736446_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201707120748480_AddOrderId.cs" />
+    <Compile Include="Migrations\201707120748480_AddOrderId.Designer.cs">
+      <DependentUpon>201707120748480_AddOrderId.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Ability.cs" />
     <Compile Include="Models\ApplicationContext.cs" />
@@ -85,6 +89,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201707120736446_InitialCreate.resx">
       <DependentUpon>201707120736446_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707120748480_AddOrderId.resx">
+      <DependentUpon>201707120748480_AddOrderId.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

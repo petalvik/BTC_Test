@@ -15,6 +15,8 @@ namespace DAL.Models
         public string Description { get; set; }
         public byte[] Image { get; set; }
 
+        public int OrderId { get; set; }
+
         [MaxLength(128)]
         public string UserId { get; set; }
 
