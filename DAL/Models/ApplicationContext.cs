@@ -6,7 +6,7 @@ namespace DAL.Models
 {
     public class ApplicationContext : IdentityDbContext<ApplicationUser>
     {
-        public ApplicationContext(string conectionString) : base("DefaultConnection") { }
+        public ApplicationContext() : base("DefaultConnection") { }
         
         public DbSet<ClientProfile> ClientProfiles { get; set; }
         public DbSet<Ability> Abilities { get; set; }
