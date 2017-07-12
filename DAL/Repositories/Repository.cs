@@ -1,4 +1,5 @@
-﻿using DAL.Models;
+﻿using DAL.Interfaces;
+using DAL.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -10,13 +11,13 @@ namespace DAL.Repositories
     public class Repository<TEntity> : IRepository<TEntity>
         where TEntity : class
     {
-        private readonly UserContext _userContext;
+        private readonly ApplicationContext _context;
         private readonly DbSet<TEntity> _dbSet;
 
-        public Repository(UserContext context)
+        public Repository(IUnitOfWork uow)
         {
-            _userContext = context;
-            _dbSet = context.Set<TEntity>();
+            _context = uow.Context;
+            _dbSet = _context.Set<TEntity>();
         }
 
         public virtual IEnumerable<TEntity> Get(
@@ -53,14 +54,14 @@ namespace DAL.Repositories
         }
 
         public virtual void Insert(TEntity entity)
-        {            
+        {
             _dbSet.Add(entity);
         }
 
         public virtual void Update(TEntity entityToUpdate)
         {
             _dbSet.Attach(entityToUpdate);
-            _userContext.Entry(entityToUpdate).State = EntityState.Modified;
+            _context.Entry(entityToUpdate).State = EntityState.Modified;
         }
 
         public virtual void Delete(object id)
@@ -71,7 +72,7 @@ namespace DAL.Repositories
 
         public virtual void Delete(TEntity entityToDelete)
         {
-            if (_userContext.Entry(entityToDelete).State == EntityState.Detached)
+            if (_context.Entry(entityToDelete).State == EntityState.Detached)
             {
                 _dbSet.Attach(entityToDelete);
             }
@@ -80,7 +81,7 @@ namespace DAL.Repositories
 
         public void Save()
         {
-            _userContext.SaveChanges();
+            _context.SaveChanges();
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using Ninject.Web.Common;
 using DAL.Repositories;
 using DAL.Models;
+using DAL.Interfaces;
 
 namespace BTC.Util
 {
@@ -30,6 +31,9 @@ namespace BTC.Util
 
         private void AddBindings()
         {
+            _kernel.Bind<IUnitOfWork>().To<IdentityUnitOfWork>().InRequestScope()
+                .WithConstructorArgument("connectionString", "DefaultConnection");
+            
             _kernel.Bind<IRepository<Hero>>().To<Repository<Hero>>().InRequestScope();
             _kernel.Bind<IRepository<Ability>>().To<Repository<Ability>>().InRequestScope();
         }

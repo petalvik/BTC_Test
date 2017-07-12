@@ -216,3 +216,5 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+/BTC/App_Data/BTC.mdf
+/BTC/App_Data/BTC_log.ldf
